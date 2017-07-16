@@ -1,2 +1,2 @@
 # MVP sample
-Clear MVP sample for beginners, without any libraries
+Clear MVP sample for beginners, without any interfaces and libraries
