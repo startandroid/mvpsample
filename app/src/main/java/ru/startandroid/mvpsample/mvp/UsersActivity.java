@@ -31,7 +31,6 @@ public class UsersActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single);
         init();
-        presenter.loadUsers();
     }
 
     private void init() {
