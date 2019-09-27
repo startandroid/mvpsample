@@ -16,5 +16,4 @@ public class UserTable {
                             + "%s text,"
                             + "%s text" + ");",
                     TABLE, COLUMN.ID, COLUMN.NAME, COLUMN.EMAIL);
-
 }

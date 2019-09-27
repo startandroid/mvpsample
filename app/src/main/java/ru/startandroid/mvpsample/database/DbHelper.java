@@ -9,8 +9,8 @@ import ru.startandroid.mvpsample.common.UserTable;
 
 public class DbHelper extends SQLiteOpenHelper {
 
-    public static final String NAME = "mvpsample";
-    public static final int VERSION = 1;
+    private static final String NAME = "mvpsample";
+    private static final int VERSION = 1;
 
     public DbHelper(Context context) {
         super(context, NAME, null, VERSION);
