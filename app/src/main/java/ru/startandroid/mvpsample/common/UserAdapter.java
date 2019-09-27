@@ -1,6 +1,7 @@
 package ru.startandroid.mvpsample.common;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,8 +15,9 @@ import ru.startandroid.mvpsample.R;
 
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
-    List<User> data = new ArrayList<>();
+    private List<User> data = new ArrayList<>();
 
+    @NonNull
     @Override
     public UserHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.user_item, parent, false);
@@ -43,14 +45,13 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserHolder> {
 
         TextView text;
 
-        public UserHolder(View itemView) {
+        UserHolder(View itemView) {
             super(itemView);
-            text = (TextView) itemView.findViewById(R.id.text);
+            text = itemView.findViewById(R.id.text);
         }
 
         void bind(User user) {
             text.setText(String.format("id: %s, name: %s, email: %s", user.getId(), user.getName(), user.getEmail()));
         }
     }
-
 }

@@ -4,12 +4,11 @@ import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.AsyncTask;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -43,29 +42,19 @@ public class SingleActivity extends AppCompatActivity {
 
     private void init() {
 
-        editTextName = (EditText) findViewById(R.id.name);
-        editTextEmail = (EditText) findViewById(R.id.email);
+        editTextName = findViewById(R.id.name);
+        editTextEmail = findViewById(R.id.email);
 
-        findViewById(R.id.add).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addUser();
-            }
-        });
+        findViewById(R.id.add).setOnClickListener(v -> addUser());
 
-        findViewById(R.id.clear).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                clearUsers();
-            }
-        });
+        findViewById(R.id.clear).setOnClickListener(v -> clearUsers());
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
 
         userAdapter = new UserAdapter();
 
-        RecyclerView userList = (RecyclerView) findViewById(R.id.list);
+        RecyclerView userList = findViewById(R.id.list);
         userList.setLayoutManager(layoutManager);
         userList.setAdapter(userAdapter);
 
@@ -183,6 +172,4 @@ public class SingleActivity extends AppCompatActivity {
             loadUsers();
         }
     }
-
-
 }

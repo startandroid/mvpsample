@@ -3,44 +3,35 @@ package ru.startandroid.mvpsample.mvp;
 import android.content.ContentValues;
 import android.text.TextUtils;
 
-import java.util.List;
-
 import ru.startandroid.mvpsample.R;
-import ru.startandroid.mvpsample.common.User;
 import ru.startandroid.mvpsample.common.UserTable;
 
-public class UsersPresenter {
+class UsersPresenter {
 
     private UsersActivity view;
     private final UsersModel model;
 
-    public UsersPresenter(UsersModel model) {
+    UsersPresenter(UsersModel model) {
         this.model = model;
     }
 
-    public void attachView(UsersActivity usersActivity) {
+    void attachView(UsersActivity usersActivity) {
         view = usersActivity;
     }
 
-    public void detachView() {
+    void detachView() {
         view = null;
     }
 
-
-    public void viewIsReady() {
+    void viewIsReady() {
         loadUsers();
     }
 
-    public void loadUsers() {
-        model.loadUsers(new UsersModel.LoadUserCallback() {
-            @Override
-            public void onLoad(List<User> users) {
-                view.showUsers(users);
-            }
-        });
+    private void loadUsers() {
+        model.loadUsers(users -> view.showUsers(users));
     }
 
-    public void add() {
+    void add() {
         UserData userData = view.getUserData();
         if (TextUtils.isEmpty(userData.getName()) || TextUtils.isEmpty(userData.getEmail())) {
             view.showToast(R.string.empty_values);
@@ -51,24 +42,17 @@ public class UsersPresenter {
         cv.put(UserTable.COLUMN.NAME, userData.getName());
         cv.put(UserTable.COLUMN.EMAIL, userData.getEmail());
         view.showProgress();
-        model.addUser(cv, new UsersModel.CompleteCallback() {
-            @Override
-            public void onComplete() {
-                view.hideProgress();
-                loadUsers();
-            }
+        model.addUser(cv, () -> {
+            view.hideProgress();
+            loadUsers();
         });
     }
 
-    public void clear() {
+    void clear() {
         view.showProgress();
-        model.clearUsers(new UsersModel.CompleteCallback() {
-            @Override
-            public void onComplete() {
-                view.hideProgress();
-                loadUsers();
-            }
+        model.clearUsers(() -> {
+            view.hideProgress();
+            loadUsers();
         });
     }
-
 }

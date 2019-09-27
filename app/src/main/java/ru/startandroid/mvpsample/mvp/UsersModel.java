@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.AsyncTask;
 
+import java.lang.ref.WeakReference;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -12,26 +13,26 @@ import ru.startandroid.mvpsample.common.User;
 import ru.startandroid.mvpsample.common.UserTable;
 import ru.startandroid.mvpsample.database.DbHelper;
 
-public class UsersModel {
+class UsersModel {
 
     private final DbHelper dbHelper;
 
-    public UsersModel(DbHelper dbHelper) {
+    UsersModel(DbHelper dbHelper) {
         this.dbHelper = dbHelper;
     }
 
-    public void loadUsers(LoadUserCallback callback) {
-        LoadUsersTask loadUsersTask = new LoadUsersTask(callback);
+    void loadUsers(LoadUserCallback callback) {
+        LoadUsersTask loadUsersTask = new LoadUsersTask(callback, dbHelper);
         loadUsersTask.execute();
     }
 
-    public void addUser(ContentValues contentValues, CompleteCallback callback) {
-        AddUserTask addUserTask = new AddUserTask(callback);
+    void addUser(ContentValues contentValues, CompleteCallback callback) {
+        AddUserTask addUserTask = new AddUserTask(callback, dbHelper);
         addUserTask.execute(contentValues);
     }
 
-    public void clearUsers(CompleteCallback completeCallback) {
-        ClearUsersTask clearUsersTask = new ClearUsersTask(completeCallback);
+    void clearUsers(CompleteCallback completeCallback) {
+        ClearUsersTask clearUsersTask = new ClearUsersTask(completeCallback, dbHelper);
         clearUsersTask.execute();
     }
 
@@ -44,18 +45,20 @@ public class UsersModel {
         void onComplete();
     }
 
-    class LoadUsersTask extends AsyncTask<Void, Void, List<User>> {
+    static class LoadUsersTask extends AsyncTask<Void, Void, List<User>> {
 
         private final LoadUserCallback callback;
+        private WeakReference<DbHelper> dbHelperReference;
 
-        LoadUsersTask(LoadUserCallback callback) {
+        LoadUsersTask(LoadUserCallback callback, DbHelper dbHelper) {
             this.callback = callback;
+            dbHelperReference = new WeakReference<>(dbHelper);
         }
 
         @Override
         protected List<User> doInBackground(Void... params) {
             List<User> users = new LinkedList<>();
-            Cursor cursor = dbHelper.getReadableDatabase().query(UserTable.TABLE, null, null, null, null, null, null);
+            Cursor cursor = dbHelperReference.get().getReadableDatabase().query(UserTable.TABLE, null, null, null, null, null, null);
             while (cursor.moveToNext()) {
                 User user = new User();
                 user.setId(cursor.getLong(cursor.getColumnIndex(UserTable.COLUMN.ID)));
@@ -75,18 +78,20 @@ public class UsersModel {
         }
     }
 
-    class AddUserTask extends AsyncTask<ContentValues, Void, Void> {
+    static class AddUserTask extends AsyncTask<ContentValues, Void, Void> {
 
         private final CompleteCallback callback;
+        private WeakReference<DbHelper> dbHelperReference;
 
-        AddUserTask(CompleteCallback callback) {
+        AddUserTask(CompleteCallback callback, DbHelper dbHelper) {
             this.callback = callback;
+            dbHelperReference = new WeakReference<>(dbHelper);
         }
 
         @Override
         protected Void doInBackground(ContentValues... params) {
             ContentValues cvUser = params[0];
-            dbHelper.getWritableDatabase().insert(UserTable.TABLE, null, cvUser);
+            dbHelperReference.get().getWritableDatabase().insert(UserTable.TABLE, null, cvUser);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -104,17 +109,19 @@ public class UsersModel {
         }
     }
 
-    class ClearUsersTask extends AsyncTask<Void, Void, Void> {
+    static class ClearUsersTask extends AsyncTask<Void, Void, Void> {
 
         private final CompleteCallback callback;
+        private WeakReference<DbHelper> dbHelperReference;
 
-        ClearUsersTask(CompleteCallback callback) {
+        ClearUsersTask(CompleteCallback callback, DbHelper dbHelper) {
             this.callback = callback;
+            dbHelperReference = new WeakReference<>(dbHelper);
         }
 
         @Override
         protected Void doInBackground(Void... params) {
-            dbHelper.getWritableDatabase().delete(UserTable.TABLE, null, null);
+            dbHelperReference.get().getWritableDatabase().delete(UserTable.TABLE, null, null);
             try {
                 TimeUnit.SECONDS.sleep(1);
             } catch (InterruptedException e) {
@@ -131,6 +138,4 @@ public class UsersModel {
             }
         }
     }
-
-
 }
