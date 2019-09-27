@@ -14,7 +14,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="16dp"
         android:layout_marginRight="16dp"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginEnd="16dp" />
 
     <Button
         android:id="@+id/add"
@@ -24,7 +25,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/email"
         android:layout_marginBottom="1dp"
         app:layout_constraintLeft_toRightOf="@+id/email"
-        android:layout_marginLeft="24dp" />
+        android:layout_marginLeft="24dp"
+        android:layout_marginStart="24dp" />
 
     <EditText
         android:id="@+id/name"
@@ -36,7 +38,8 @@
         android:layout_marginLeft="16dp"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="16dp" />
+        android:layout_marginTop="16dp"
+        android:layout_marginStart="16dp" />
 
     <EditText
         android:id="@+id/email"
@@ -48,7 +51,9 @@
         android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@+id/name"
         android:layout_marginLeft="0dp"
-        app:layout_constraintLeft_toLeftOf="@+id/name" />
+        app:layout_constraintLeft_toLeftOf="@+id/name"
+        tools:ignore="TextFields"
+        android:layout_marginStart="0dp" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
